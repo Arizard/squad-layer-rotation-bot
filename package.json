@@ -1,0 +1,17 @@
+{
+  "name": "squad-layer-rotation-bot",
+  "version": "0.0.1",
+  "description": "Layer Rotation Bot Plugin for SquadJS",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest ."
+  },
+  "keywords": [
+    "squadjs",
+    "squad",
+    "layer",
+    "rotation"
+  ],
+  "author": "Arizard",
+  "license": "GPL-3.0-or-later"
+}

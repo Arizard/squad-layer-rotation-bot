@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "Layer Rotation Bot Plugin for SquadJS",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "test": "jest ."
+    "test": "jest"
   },
   "keywords": [
     "squadjs",
@@ -13,5 +14,17 @@
     "rotation"
   ],
   "author": "Arizard",
-  "license": "GPL-3.0-or-later"
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
+    "babel-jest": "^26.5.2",
+    "eslint": "^7.12.1",
+    "eslint-config-google": "^0.14.0",
+    "jest": "^26.5.3"
+  },
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "jest-config": "^26.6.1"
+  }
 }

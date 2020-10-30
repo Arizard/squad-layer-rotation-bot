@@ -1,3 +1,9 @@
 # Squad Layer Rotation Bot
 
-_WIP_
+This is a Layer Rotation plugin for SquadJS.
+
+## Installation
+
+1. Copy `squad-layer-rotation-bot` into the `/plugins` directory.
+2. Configure `squad-layer-rotation-bot/config.js` to your liking.
+3. TODO

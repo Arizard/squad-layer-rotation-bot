@@ -1,63 +1,64 @@
 const defaultOptions = {
-  choices: [],
+  choices: [], // each element in choices must have a `name` property.
   votingDurationSeconds: 20,
-  onAnnouncement: function (message) {
-    console.log(`[] ${message}`)
+  onAnnouncement: function(message) {
+    console.log(`[] ${message}`);
   },
-  onPrivateMessage: function (userID, message) {
-    console.log(`[] to ${userID}] ${message}`)
+  onPrivateMessage: function(userID, message) {
+    console.log(`[] to ${userID}] ${message}`);
   },
   onVotingFinished: function(winner) {
-    console.log(`[] winner ${winner}`)
-  }
+    console.log(`[] winner ${winner}`);
+  },
 };
 
 const states = {
   preVoting: {
-    name: "preVoting",
+    name: 'preVoting',
     updateVote() {
-      console.log("Can't vote in state preVoting.")
+      console.log('Can\'t vote in state preVoting.');
     },
-    enter(self){},
-    exit(self){},
+    enter(self) {},
+    exit(self) {},
   },
   voting: {
-    name: "voting",
+    name: 'voting',
     updateVote(self, userId, choiceNumber) {
       if (choiceNumber > self.options.choices.length) {
-        return
+        return;
       }
       console.log(`${userId} voted for ${choiceNumber}`);
 
-      self.votes[userId] = choiceNumber;
+      self.votes.set(userId, choiceNumber);
       console.log(self.votes);
     },
-    enter(self){
+    enter(self) {
     },
-    exit(self){},
+    exit(self) {},
   },
   postVoting: {
-    name: "postVoting",
+    name: 'postVoting',
     updateVote(self) {
-      console.log("Can't vote in state postVoting.")
+      console.log('Can\'t vote in state postVoting.');
     },
-    enter(self){},
-    exit(self){},
+    enter(self) {},
+    exit(self) {},
   },
 };
 
-class VoteBot {
-
-  options = defaultOptions;
-  state = states.preVoting;
-  votingTimeout = null;
-  resolveVoting = (...args) => {
-  };
-  rejectVoting = (...args) => {
-  };
-  votes = {};
-
+/**
+ * VoteBot is a class to model a voting system.
+ */
+export default class VoteBot {
   constructor(options) {
+    this.options = defaultOptions;
+    this.state = states.preVoting;
+    this.votingTimeout = null;
+    this.resolveVoting = (...args) => {
+    };
+    this.rejectVoting = (...args) => {
+    };
+    this.votes = new Map();
     this.options = {...this.options, ...options};
     this.state.enter();
     this.logState();
@@ -71,13 +72,13 @@ class VoteBot {
     this.state = states.voting;
     this.logState();
 
-    this.options.onAnnouncement("Voting started.");
+    this.options.onAnnouncement('Voting started.');
     this.options.choices.map((option, index) => {
       this.options.onAnnouncement(`${index + 1}. ${option.name}`);
     });
 
     this.votingTimeout = setTimeout(() => {
-      this.finishVoting()
+      this.finishVoting();
     }, this.options.votingDurationSeconds * 1000);
   }
 
@@ -85,7 +86,7 @@ class VoteBot {
     this.state = states.preVoting;
     this.logState();
 
-    this.options.onAnnouncement("Voting cancelled.");
+    this.options.onAnnouncement('Voting cancelled.');
 
     clearTimeout(this.votingTimeout);
   }
@@ -93,13 +94,13 @@ class VoteBot {
   finishVoting() {
     this.state = states.postVoting;
     this.logState();
-    const totals = Object.values(this.votes).reduce((acc, val) => {
+    const totals = [...this.votes.values()].reduce((acc, val) => {
       if (acc.has(val)) {
         acc.set(val, acc.get(val) + 1);
       } else {
         acc.set(val, 1);
       }
-      return acc
+      return acc;
     }, new Map());
 
     let highest = 0;
@@ -112,9 +113,9 @@ class VoteBot {
       }
     });
 
-    this.options.onAnnouncement("Voting finished.");
+    this.options.onAnnouncement('Voting finished.');
     if (winner !== null) {
-      this.options.onVotingFinished({name: winner.name});
+      this.options.onVotingFinished(winner);
     }
   }
 
@@ -122,5 +123,3 @@ class VoteBot {
     return this.state.updateVote(this, ...args);
   }
 }
-
-module.exports = VoteBot;

@@ -30,9 +30,9 @@ export default class CommandDispatcher {
   /** Handle a message from a user by dispatching a command.
    * @param {string} message - the chat message
    * @param {string} userId - a unique identifier for the user */
-  handle(message, userId) {
+  handle(message, userId, isAdmin) {
     const [command, ...args] = message.split(' ');
-    if (this.canUseCommand(command, userId) !== true) {
+    if (this.canUseCommand(command, userId, isAdmin) !== true) {
       return;
     }
     if (!this.commands.has(command)) {
